@@ -33,7 +33,7 @@
       }
 
       button {
-        margin-top: 2rem;
+        margin-top: 1rem;
         padding: 12px 24px;
         font-size: 1rem;
         border: none;
@@ -46,6 +46,22 @@
       button:hover {
         background: #ddd;
       }
+
+      canvas {
+        margin-top: 20px;
+        background: #000;
+        border: 2px solid #333;
+      }
+
+      .controls {
+        margin-top: 15px;
+      }
+
+      .controls button {
+        font-size: 24px;
+        margin: 5px;
+        padding: 10px 15px;
+      }
     </style>
   </head>
 
@@ -57,17 +73,16 @@
     </div>
 
     <script is:inline>
+      // ---------- FLOW ----------
       function nextScreen() {
-        const screen = document.getElementById("screen");
-        screen.innerHTML = `
+        screen().innerHTML = `
           <h1>hello</h1>
           <button onclick="stats()">dalej</button>
         `;
       }
 
       function stats() {
-        const screen = document.getElementById("screen");
-        screen.innerHTML = `
+        screen().innerHTML = `
           <h1>statystyki filipa</h1>
           <p>
             level: ??? <br />
@@ -79,11 +94,103 @@
       }
 
       function final() {
-        const screen = document.getElementById("screen");
-        screen.innerHTML = `
-          <h1>ale cię kocham</h1>
-          <p>i jeździj tym dźwigowozem ładnie</p>
+        screen().innerHTML = `
+          <h1>ok, pograj</h1>
+          <p>palcem albo strzałkami</p>
+
+          <canvas id="game" width="300" height="300"></canvas>
+
+          <div class="controls">
+            <button onclick="setDir('UP')">⬆️</button><br/>
+            <button onclick="setDir('LEFT')">⬅️</button>
+            <button onclick="setDir('DOWN')">⬇️</button>
+            <button onclick="setDir('RIGHT')">➡️</button>
+          </div>
         `;
+        startSnake();
+      }
+
+      function screen() {
+        return document.getElementById("screen");
+      }
+
+      // ---------- SNAKE ----------
+      let direction = "RIGHT";
+      let gameInterval;
+
+      function setDir(dir) {
+        if (dir === "LEFT" && direction !== "RIGHT") direction = "LEFT";
+        if (dir === "UP" && direction !== "DOWN") direction = "UP";
+        if (dir === "RIGHT" && direction !== "LEFT") direction = "RIGHT";
+        if (dir === "DOWN" && direction !== "UP") direction = "DOWN";
+      }
+
+      function startSnake() {
+        clearInterval(gameInterval);
+
+        const canvas = document.getElementById("game");
+        const ctx = canvas.getContext("2d");
+
+        const box = 15;
+        let snake = [{ x: 9 * box, y: 9 * box }];
+        direction = "RIGHT";
+
+        let food = {
+          x: Math.floor(Math.random() * 20) * box,
+          y: Math.floor(Math.random() * 20) * box,
+        };
+
+        document.onkeydown = (e) => {
+          if (e.key === "ArrowLeft") setDir("LEFT");
+          if (e.key === "ArrowUp") setDir("UP");
+          if (e.key === "ArrowRight") setDir("RIGHT");
+          if (e.key === "ArrowDown") setDir("DOWN");
+        };
+
+        function draw() {
+          ctx.fillStyle = "#000";
+          ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+          snake.forEach((part) => {
+            ctx.fillStyle = "lime";
+            ctx.fillRect(part.x, part.y, box, box);
+          });
+
+          ctx.fillStyle = "red";
+          ctx.fillRect(food.x, food.y, box, box);
+
+          let head = { ...snake[0] };
+
+          if (direction === "LEFT") head.x -= box;
+          if (direction === "UP") head.y -= box;
+          if (direction === "RIGHT") head.x += box;
+          if (direction === "DOWN") head.y += box;
+
+          if (
+            head.x < 0 ||
+            head.y < 0 ||
+            head.x >= canvas.width ||
+            head.y >= canvas.height ||
+            snake.some((s) => s.x === head.x && s.y === head.y)
+          ) {
+            clearInterval(gameInterval);
+            alert("rip snake 🐍");
+            return;
+          }
+
+          if (head.x === food.x && head.y === food.y) {
+            food = {
+              x: Math.floor(Math.random() * 20) * box,
+              y: Math.floor(Math.random() * 20) * box,
+            };
+          } else {
+            snake.pop();
+          }
+
+          snake.unshift(head);
+        }
+
+        gameInterval = setInterval(draw, 120);
       }
     </script>
   </body>
