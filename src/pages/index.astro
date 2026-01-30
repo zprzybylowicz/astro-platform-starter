@@ -1,19 +1,83 @@
 ---
-import Layout from '../layouts/Layout.astro';
-import Markdown from '../components/Markdown.astro';
-
-const explainer = `
-An Astro website can go way beyond static pages - on the right platform.
-
-Netlify supports not only [Streaming SSR](https://docs.astro.build/en/guides/server-side-rendering/#html-streaming) and fast [Edge Middleware](https://docs.astro.build/en/guides/middleware/), but also [on-demand revalidation](https://www.netlify.com/blog/cache-tags-and-purge-api-on-netlify/) and [stale-while-revalidate](https://www.netlify.com/blog/swr-and-fine-grained-cache-control/). 
-Any page or data can be rebuilt only when needed, without site visitors ever getting a performance hit.
-`;
 ---
+<!DOCTYPE html>
+<html lang="pl">
+  <head>
+    <meta charset="UTF-8" />
+    <title>siema filip</title>
 
-<Layout title="Welcome to Astro.">
-    <h1 class="mb-10">Netlify Platform Starter for Astro</h1>
-    <Markdown content={explainer} class="mb-10 text-lg" />
-    <p>
-        <a href="https://docs.netlify.com/frameworks/astro/" class="btn btn-lg sm:min-w-64">Read the Docs</a>
-    </p>
-</Layout>
+    <style>
+      body {
+        margin: 0;
+        height: 100vh;
+        background: #0f0f0f;
+        color: white;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-family: system-ui, sans-serif;
+      }
+
+      .container {
+        text-align: center;
+      }
+
+      h1 {
+        font-size: 4rem;
+        margin: 0;
+      }
+
+      p {
+        margin-top: 0.5rem;
+        opacity: 0.6;
+      }
+
+      button {
+        margin-top: 2rem;
+        padding: 12px 24px;
+        font-size: 1rem;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        background: white;
+        color: black;
+      }
+
+      button:hover {
+        background: #ddd;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="container" id="screen">
+      <h1>siema filip</h1>
+      <p>wiem że kliknąłeś z ciekawości</p>
+      <button id="next">no dobra, co to</button>
+    </div>
+
+    <script>
+      const screen = document.getElementById("screen");
+      const button = document.getElementById("next");
+
+      button.addEventListener("click", () => {
+        screen.innerHTML = `
+          <h1>to jest strona o tobie</h1>
+          <p>(tak, poświęciłam na to czas)</p>
+          <button id="next2">dalej</button>
+        `;
+
+        document.getElementById("next2").addEventListener("click", () => {
+          screen.innerHTML = `
+            <h1>statystyki filipa</h1>
+            <p>
+              level: ??? <br />
+              umiejętność: irytowanie mnie <br />
+              status: online (niestety)
+            </p>
+          `;
+        });
+      });
+    </script>
+  </body>
+</html>
