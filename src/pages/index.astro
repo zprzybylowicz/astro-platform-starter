@@ -62,22 +62,30 @@
 
       button.addEventListener("click", () => {
         screen.innerHTML = `
-          <h1>to jest strona o tobie</h1>
-          <p>(tak, poświęciłam na to czas)</p>
+          <h1> HEllo </h1>
+          <p></p>
           <button id="next2">dalej</button>
         `;
 
         document.getElementById("next2").addEventListener("click", () => {
-          screen.innerHTML = `
-            <h1>statystyki filipa</h1>
-            <p>
-              level: ??? <br />
-              umiejętność: irytowanie mnie <br />
-              status: online (niestety)
-            </p>
-          `;
-        });
-      });
+  screen.innerHTML = `
+    <h1>statystyki filipa</h1>
+    <p>
+      level: ??? <br />
+      umiejętność: irytowanie mnie <br />
+      status: online (niestety)
+    </p>
+    <button id="final">następnie</button>
+  `;
+
+  document.getElementById("final").addEventListener("click", () => {
+    screen.innerHTML = `
+      <h1>ale cię kocham</h1>
+      <p>i jeździj tym dźwigowozem ładnie</p>
+    `;
+  });
+});
+
     </script>
   </body>
 </html>
